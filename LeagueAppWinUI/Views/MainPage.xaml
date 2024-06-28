@@ -1,0 +1,20 @@
+﻿<Page
+    x:Class="LeagueAppWinUI.Views.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid x:Name="ContentArea">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Button x:Name="getClientButton" Click="getClientButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top">Get Client</Button>
+            <Button x:Name="myButton" Click="myButton_Click" HorizontalAlignment="Center" VerticalAlignment="Top">Get Info</Button>
+            <TextBlock x:Name="myText" Text="Sample text" Width="Auto" MaxWidth="500" IsTextSelectionEnabled="True" TextWrapping="WrapWholeWords" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <TextBlock x:Name="AdministratorStatusTextBlock" HorizontalAlignment="Right" VerticalAlignment="Top"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="10">
+            <TextBlock x:Name="legalText" Text="Project Tomato isn't endorsed by Riot Games and doesn't reflect the views or opinions of Riot Games or anyone officially involved in producing or managing Riot Games properties. Riot Games, and all associated properties are trademarks or registered trademarks of Riot Games, Inc." Width="500" IsTextSelectionEnabled="True" TextWrapping="WrapWholeWords"/>
+        </StackPanel>
+    </Grid>
+</Page>
