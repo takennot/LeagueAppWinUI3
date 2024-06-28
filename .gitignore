@@ -397,3 +397,4 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 LeagueAppWinUI/Properties/launchsettings.json
+LeagueAppWinUI3/LeagueAppWinUI/Assets/.env
