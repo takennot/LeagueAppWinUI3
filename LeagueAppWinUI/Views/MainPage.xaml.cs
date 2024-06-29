@@ -1,18 +1,21 @@
 ﻿using LeagueAppWinUI.ViewModels;
-
 using Microsoft.UI.Xaml.Controls;
-using dotenv.net;
 using MingweiSamuel.Camille;
 using PoniLCU;
 using static PoniLCU.LeagueClient;
 using System.Security.Principal;
 using Microsoft.UI.Xaml;
+using Newtonsoft.Json;
+using LeagueAppWinUI.Models;
+using Microsoft.UI.Xaml.Media.Imaging;
+using Microsoft.UI.Xaml.Media;
+using System.Xml.Linq;
 
 namespace LeagueAppWinUI.Views;
 
 public sealed partial class MainPage : Page
 {
-    string? apiKey;
+    string? apiKey = Environment.GetEnvironmentVariable("RIOT_API");
     static LeagueClient? leagueClient;
 
     public MainViewModel ViewModel
@@ -24,10 +27,6 @@ public sealed partial class MainPage : Page
     {
         ViewModel = App.GetService<MainViewModel>();
         InitializeComponent();
-        AdministratorStatusTextBlock.Text = IsAdmin() is true
-            ? "Running as admin."
-            : "NOT running as admin.";
-        myButton.IsEnabled = false;
     }
 
     public static bool IsAdmin()
@@ -36,28 +35,52 @@ public sealed partial class MainPage : Page
         var principal = new WindowsPrincipal(identity);
         return principal.IsInRole(WindowsBuiltInRole.Administrator);
     }
-    private async void myButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    private async void getInfoButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
+        double left = (profilePictureCanvas.ActualWidth - progressBarNextLevel.ActualWidth) / 2;
+        Canvas.SetLeft(progressBarNextLevel, left);
+        double left2 = (profilePictureCanvas.ActualWidth - profilePic.ActualWidth) / 2;
+        Canvas.SetLeft(profilePic, left2);
+        //double left3 = (profilePictureCanvas.ActualWidth - profileName.ActualWidth) / 2;
+        //Canvas.SetLeft(profileName, left3);
+
+        leagueClient = new LeagueClient(credentials.lockfile);
         // TODO: Update API Key every 24 hours
         // Debug -> LeagueAppWinUI Debug Properties -> LeagueAppWinUI (Unpackaged)
         // -> Environment Variables
-        apiKey = Environment.GetEnvironmentVariable("RIOT_API");
-        if (apiKey != null)
-        {
-            // Riot API
-            //var riotApi = MingweiSamuel.Camille.RiotApi.NewInstance(apiKey);
-            //var accData = riotApi.SummonerV4.GetByPUUID(MingweiSamuel.Camille.Enums.Region.EUNE, "pNngUigS14BX3Ghd53rhWivGS54zVxi87l8-MPMf-chcoWUydRmU5gdICco6I4xxaSt8QDzae8W4-g");
-            //myText.Text = accData.SummonerLevel.ToString();
+        //if (apiKey != null)
+        //{
+        //    // Riot API
+        //    //var riotApi = MingweiSamuel.Camille.RiotApi.NewInstance(apiKey);
+        //    //var accData = riotApi.SummonerV4.GetByPUUID(MingweiSamuel.Camille.Enums.Region.EUNE, "pNngUigS14BX3Ghd53rhWivGS54zVxi87l8-MPMf-chcoWUydRmU5gdICco6I4xxaSt8QDzae8W4-g");
+        //    //myText.Text = accData.SummonerLevel.ToString();
 
-            // LCU API
-            if (leagueClient != null)
+            
+
+        //}
+        // LCU API
+        if (leagueClient != null)
+        {
+            try
             {
-                var accData = await leagueClient.Request(requestMethod.GET, "/lol-summoner/v1/current-summoner");
+                string accData = await leagueClient.Request(requestMethod.GET, "/lol-summoner/v1/current-summoner");
                 if (accData != null)
                 {
-                    //myText.Text = accData.SummonerLevel.ToString();
-                    myText.Text = accData.ToString();
+                    SummonerProfile? summonerProfile = new SummonerProfile();
+                    summonerProfile = JsonConvert.DeserializeObject<SummonerProfile>(accData);
+
+                    BitmapImage bi3 = new BitmapImage();
+                    bi3.UriSource = new Uri("https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/profile-icons/" + summonerProfile.profileIconId + ".jpg", UriKind.Absolute);
+                    profilePic.ProfilePicture = bi3;
+
+                    profileName.Text = summonerProfile.gameName + "#" + summonerProfile.tagLine;
+
+                    progressBarNextLevel.Value = (double)summonerProfile.percentCompleteForNextLevel;
                 }
+            }
+            catch (Exception)
+            {
+                ShowErrorNoClient();
             }
         }
     }
@@ -77,21 +100,6 @@ public sealed partial class MainPage : Page
         if (result == ContentDialogResult.Primary)
         {
             Environment.Exit(0);
-        }
-    }
-
-    private void getClientButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
-    {
-        // TODO: shit doesnt work, find a way to check if client is actually running
-        leagueClient = new LeagueClient(credentials.lockfile);
-        if (leagueClient == null)
-        {
-            ShowErrorNoClient();
-        }
-        else
-        {
-            getClientButton.IsEnabled = false;
-            myButton.IsEnabled = true;
         }
     }
 }

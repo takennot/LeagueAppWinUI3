@@ -30,6 +30,7 @@
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.240607001" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.9" />
     <PackageReference Include="MingweiSamuel.Camille" Version="2.8.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="PoniLCU" Version="1.0.3" />
     <PackageReference Include="WinUIEx" Version="2.3.4" />
   </ItemGroup>

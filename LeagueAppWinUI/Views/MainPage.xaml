@@ -6,15 +6,43 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid x:Name="ContentArea">
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Button x:Name="getClientButton" Click="getClientButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top">Get Client</Button>
-            <Button x:Name="myButton" Click="myButton_Click" HorizontalAlignment="Center" VerticalAlignment="Top">Get Info</Button>
-            <TextBlock x:Name="myText" Text="Sample text" Width="Auto" MaxWidth="500" IsTextSelectionEnabled="True" TextWrapping="WrapWholeWords" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <TextBlock x:Name="AdministratorStatusTextBlock" HorizontalAlignment="Right" VerticalAlignment="Top"/>
-        </StackPanel>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="10">
-            <TextBlock x:Name="legalText" Text="Project Tomato isn't endorsed by Riot Games and doesn't reflect the views or opinions of Riot Games or anyone officially involved in producing or managing Riot Games properties. Riot Games, and all associated properties are trademarks or registered trademarks of Riot Games, Inc." Width="500" IsTextSelectionEnabled="True" TextWrapping="WrapWholeWords"/>
-        </StackPanel>
+    <Grid x:Name="ContentArea" Width="Auto" Height="Auto" ColumnDefinitions="*, *, 300, *, *" RowDefinitions="*, 100, 300, *, 100">
+        <Button x:Name="getInfoButton" 
+                Click="getInfoButton_Click" 
+                Grid.Column="2"
+                Grid.Row="0"
+                HorizontalAlignment="Center">Get Info</Button>
+
+        <TextBlock x:Name="profileName"
+           Width="Auto" 
+           IsTextSelectionEnabled="True"
+           HorizontalAlignment="Center"
+                   Grid.Column="2"
+                   Grid.Row="1"
+                   VerticalAlignment="Top"
+                   FontSize="24"/>
+
+        <Canvas Grid.Column="2" Grid.Row="2" x:Name="profilePictureCanvas">
+
+            <PersonPicture x:Name="profilePic"
+                           Height="128"
+                           ProfilePicture="https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/profile-icons/0.jpg"
+                           HorizontalAlignment="Center"/>
+
+            <ProgressRing  x:Name="progressBarNextLevel" 
+                Width="128" Height="128" Value="0"
+                           Canvas.Top="-17"
+                IsIndeterminate="False"
+                Background="LightGray"/>
+
+
+        </Canvas>
+
+        <TextBlock x:Name="legalText" 
+                   Text="Project Tomato isn't endorsed by Riot Games and doesn't reflect the views or opinions of Riot Games or anyone officially involved in producing or managing Riot Games properties. Riot Games, and all associated properties are trademarks or registered trademarks of Riot Games, Inc." 
+                   IsTextSelectionEnabled="True" 
+                   TextWrapping="WrapWholeWords"
+                   Grid.Row="4"
+                   Grid.ColumnSpan="5"/>
     </Grid>
 </Page>
