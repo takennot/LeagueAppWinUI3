@@ -76,73 +76,75 @@ public sealed partial class MainPage : Page
 
                     summonerLevel.Text = "Level: " + summonerProfile.summonerLevel;
                 }
+
+                try
+                {
+                    string boosts = await leagueClient.Request(requestMethod.GET, "/lol-active-boosts/v1/active-boosts");
+                    if (boosts != null)
+                    {
+                        SummonerBoosts summonerBoosts = new SummonerBoosts();
+                        summonerBoosts = JsonConvert.DeserializeObject<SummonerBoosts>(boosts);
+
+                        DateTime currentDate = DateTime.Now;
+
+                        DateTime dailyWin = DateTime.Parse(summonerBoosts.firstWinOfTheDayStartTime);
+                        DateTime xpBoostTime = DateTime.Parse(summonerBoosts.xpBoostEndDate);
+
+                        string dailyWinStatus = dailyWin <= currentDate ? "Available!" : "Unavailable!";
+                        string xpBoostStatus = xpBoostTime <= currentDate ? "No time boosts active!" : xpBoostTime.ToString();
+
+                        boostsInfo.Text = "First win of the day: " + dailyWinStatus + "\n" +
+                                           "XP boost end date: " + xpBoostStatus + "\n" +
+                                           "Win game XP boosts: " + summonerBoosts.xpBoostPerWinCount;
+                    }
+
+                    try
+                    {
+                        var masteryData = await leagueClient.Request(requestMethod.GET, "/lol-champion-mastery/v1/local-player/champion-mastery");
+                        if (masteryData != null)
+                        {
+                            //list of champions sorted by highest mastery
+                            List<ChampionMasteryV1> championMasteries = JsonConvert.DeserializeObject<List<ChampionMasteryV1>>(masteryData);
+                            ChampionMasteryV1 mainChampionMastery = championMasteries.First();
+                            Champion mainChampion = new Champion();
+                            mainChampion = JsonConvert.DeserializeObject<Champion>(GetChampionByKey(mainChampionMastery.championId).ToString());
+                            string name = mainChampion.name;
+                            string title = mainChampion.title;
+                            string level = mainChampionMastery.championLevel.ToString();
+                            string points = mainChampionMastery.championPoints.ToString();
+                            string highestGrade = mainChampionMastery.highestGrade;
+                            string mainChampionString = name + ", " + title + "\n" +
+                                                    "Mastery Level: " + level + "\n" +
+                                                    "Mastery Points: " + points + "\n" +
+                                                    "Season's highest grade: " + highestGrade;
+
+                            championMasteryInfo.Text = mainChampionString;
+
+
+                            BitmapImage bi3 = new BitmapImage();
+                            bi3.UriSource = new Uri("https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/assets/characters/" + mainChampion.id.ToLower() + "/skins/base/images/" + mainChampion.id.ToLower() + "_splash_centered_0.jpg", UriKind.Absolute);
+                            mainChampionArt.Source = bi3;
+                        }
+                    }
+                    catch (Exception)
+                    {
+
+                        throw;
+                    }
+
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
             }
             catch (Exception)
             {
                 ShowErrorNoClient();
             }
 
-            try
-            {
-                string boosts = await leagueClient.Request(requestMethod.GET, "/lol-active-boosts/v1/active-boosts");
-                if (boosts != null)
-                {
-                    SummonerBoosts summonerBoosts = new SummonerBoosts();
-                    summonerBoosts = JsonConvert.DeserializeObject<SummonerBoosts>(boosts);
-
-                    DateTime currentDate = DateTime.Now;
-
-                    DateTime dailyWin = DateTime.Parse(summonerBoosts.firstWinOfTheDayStartTime);
-                    DateTime xpBoostTime = DateTime.Parse(summonerBoosts.xpBoostEndDate);
-
-                    string dailyWinStatus = dailyWin <= currentDate ? "Available!" : "Unavailable!";
-                    string xpBoostStatus = xpBoostTime <= currentDate ? "No time boosts active!" : xpBoostTime.ToString();
-
-                    boostsInfo.Text = "First win of the day: " + dailyWinStatus + "\n" +
-                                       "XP boost end date: " + xpBoostStatus + "\n" +
-                                       "Win game XP boosts: " + summonerBoosts.xpBoostPerWinCount;
-                }
-                
-            }
-            catch (Exception)
-            {
-
-                ShowErrorNoClient();
-            }
-
-            try
-            {
-                var masteryData = await leagueClient.Request(requestMethod.GET, "/lol-champion-mastery/v1/local-player/champion-mastery");
-                if (masteryData != null)
-                {
-                    //list of champions sorted by highest mastery
-                    List<ChampionMasteryV1> championMasteries = JsonConvert.DeserializeObject<List<ChampionMasteryV1>>(masteryData);
-                    ChampionMasteryV1 mainChampionMastery = championMasteries.First();
-                    Champion mainChampion = new Champion();
-                    mainChampion = JsonConvert.DeserializeObject<Champion>(GetChampionByKey(mainChampionMastery.championId).ToString());
-                    string name = mainChampion.name;
-                    string title = mainChampion.title;
-                    string level = mainChampionMastery.championLevel.ToString();
-                    string points = mainChampionMastery.championPoints.ToString();
-                    string highestGrade = mainChampionMastery.highestGrade;
-                    string mainChampionString = name + ", " + title + "\n" +
-                                            "Mastery Level: " + level + "\n" +
-                                            "Mastery Points: " + points + "\n" +
-                                            "Season's highest grade: " + highestGrade;
-
-                    championMasteryInfo.Text = mainChampionString;
-
-
-                    BitmapImage bi3 = new BitmapImage();
-                    bi3.UriSource = new Uri("https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/assets/characters/" + mainChampion.id.ToLower() + "/skins/base/images/" + mainChampion.id.ToLower() + "_splash_centered_0.jpg", UriKind.Absolute);
-                    mainChampionArt.Source = bi3;
-                }
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
+            
         }
     }
 
