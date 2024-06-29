@@ -4,45 +4,81 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    Loaded="Page_Loaded"
+    xmlns:behaviors="using:LeagueAppWinUI.Behaviors"
+    behaviors:NavigationViewHeaderBehavior.HeaderMode="Never">
 
-    <Grid x:Name="ContentArea" Width="Auto" Height="Auto" ColumnDefinitions="*, *, 300, *, *" RowDefinitions="*, 100, 300, *, 100">
-        <Button x:Name="getInfoButton" 
-                Click="getInfoButton_Click" 
-                Grid.Column="2"
-                Grid.Row="0"
-                HorizontalAlignment="Center">Get Info</Button>
+    <Grid x:Name="ContentArea" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" Height="Auto" ColumnDefinitions="*, *, 300, *, *" RowDefinitions="100, 300, 100, *, 100">
+
+        <Image x:Name="mainChampionArt"
+               Grid.Column="0"
+               Grid.Row="0"
+               Grid.ColumnSpan="5"
+               Grid.RowSpan="5"/>
+
+        <Rectangle Opacity="0.6" Fill="Black"
+                   Grid.Column="0"
+                   Grid.ColumnSpan="5"
+                   Grid.Row="0"
+                   Grid.RowSpan="5"/>
 
         <TextBlock x:Name="profileName"
            Width="Auto" 
            IsTextSelectionEnabled="True"
            HorizontalAlignment="Center"
                    Grid.Column="2"
-                   Grid.Row="1"
+                   Grid.Row="0"
                    VerticalAlignment="Top"
-                   FontSize="24"/>
+                   FontSize="24"
+                   Margin="0, 20, 0, 0"/>
+        
+        <TextBlock  x:Name="summonerLevel"
+                    Width="Auto" 
+                    IsTextSelectionEnabled="True"
+                    HorizontalAlignment="Center"
+                    Grid.Column="2"
+                    Grid.Row="0"
+                    VerticalAlignment="Center"
+                    FontSize="24"
+                    Margin="0, 40, 0, 0"/>
 
-        <Canvas Grid.Column="2" Grid.Row="2" x:Name="profilePictureCanvas">
+        <Canvas Grid.Column="2" Grid.Row="1" x:Name="profilePictureCanvas" Margin="30">
 
             <PersonPicture x:Name="profilePic"
                            Height="128"
-                           ProfilePicture="https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/profile-icons/0.jpg"
                            HorizontalAlignment="Center"/>
 
             <ProgressRing  x:Name="progressBarNextLevel" 
                 Width="128" Height="128" Value="0"
                            Canvas.Top="-17"
-                IsIndeterminate="False"
-                Background="LightGray"/>
-
+                IsIndeterminate="False"/>
 
         </Canvas>
+
+        <TextBlock x:Name="boostsInfo"
+                   IsTextSelectionEnabled="True"
+                   TextWrapping="WrapWholeWords"
+                   Grid.Column="2"
+                   Grid.Row="2"
+                   VerticalAlignment="Top"
+                   HorizontalAlignment="Center"/>
+
+        <TextBlock x:Name="championMasteryInfo"
+                   IsTextSelectionEnabled="True"
+                   TextWrapping="WrapWholeWords"
+                   Grid.Column="0"
+                   Grid.Row="0"
+                   Grid.ColumnSpan="2"
+                   Grid.RowSpan="4"
+                   Margin="20"/>
 
         <TextBlock x:Name="legalText" 
                    Text="Project Tomato isn't endorsed by Riot Games and doesn't reflect the views or opinions of Riot Games or anyone officially involved in producing or managing Riot Games properties. Riot Games, and all associated properties are trademarks or registered trademarks of Riot Games, Inc." 
                    IsTextSelectionEnabled="True" 
                    TextWrapping="WrapWholeWords"
                    Grid.Row="4"
-                   Grid.ColumnSpan="5"/>
+                   Grid.ColumnSpan="5"
+                   Margin="20"/>
     </Grid>
 </Page>
